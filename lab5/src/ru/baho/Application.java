@@ -14,6 +14,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -22,7 +24,6 @@ import java.util.Optional;
 public class Application extends javafx.application.Application {
 
     Store store;
-    Statement db;
     ObservableList productsViews;
     class ProductViews extends HBox
     {
@@ -79,10 +80,36 @@ public class Application extends javafx.application.Application {
             addEventFilter(MouseEvent.MOUSE_CLICKED, event);
         }
     }
+    static Connection connection = null;
+    static Statement db= null;
+    static final String DB_URL = "jdbc:postgresql://127.0.0.1:5432/java_lab_4_db?serverTimezone=Europe/Moscow&useSSL=false";
+    static final String USER = "baho";
+    static final String PASS = "KillerOfMyMind29";
 
     @Override
     public void start(Stage stage) throws Exception {
-        db = Main.statement;
+        try {
+            Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
+            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("error create Connection");
+            alert.setContentText(ex.toString());
+            alert.showAndWait();
+        }
+        if (connection != null) {
+
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Failed connection to DB");
+            alert.setContentText(null);
+            alert.showAndWait();
+        }
+        try {
+            db = connection.createStatement();
+        } catch (Exception ex) {
+            closeDB();
+        }
         if (db == null) return;
         store = new Store(db);
         store.createTables();
@@ -104,6 +131,16 @@ public class Application extends javafx.application.Application {
                 store.deleteTables();
             }
         });
+    }
+
+    private static void closeDB()
+    {
+        try {
+            db.close();
+        } catch (Exception ex)
+        {
+            System.out.println("Failed disconnection to database");
+        }
     }
 
     public ObservableList<ProductViews> getProductViews()

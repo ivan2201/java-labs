@@ -5,11 +5,14 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Console implements Runnable {
-
+    Statement db;
+    public Console(Statement db)
+    {
+        this.db = db;
+    }
     @Override
     public void run() {
         String str = "";
-        Statement db = Main.statement;
         if (db == null) return;
         Store store = new Store(db);
         store.createTables();
@@ -39,17 +42,25 @@ public class Console implements Runnable {
                 }
             } else if (str.compareTo("/show_all") == 0)
             {
-                ResultSet set = store.getAllProducts();
-                if (set != null)
+                try (ResultSet set = store.getAllProducts()) {
+                    if (set != null) {
+                        printRows(set, 4, new int[]{Store.POSITION_PRODID, Store.POSITION_ID, Store.POSITION_TITLE, Store.POSITION_COST});
+                    }
+                } catch (Exception ex)
                 {
-                    printRows(set,4, new int[] { Store.POSITION_PRODID, Store.POSITION_ID,Store.POSITION_TITLE, Store.POSITION_COST});
+                    System.out.println("Error " + ex.toString());
                 }
             } else if (str.compareTo("/price") == 0)
             {
-                ResultSet set = store.getProduct(sc.next());
-                if (set != null)
+                try (ResultSet set = store.getProduct(sc.next()))
                 {
-                    printRows(set,2, new int[] { 1, 2});
+                    if (set != null)
+                    {
+                        printRows(set,2, new int[] { 1, 2});
+                    }
+                } catch (Exception ex)
+                {
+                System.out.println("Error " + ex.toString());
                 }
             } else if (str.compareTo("/change_price") == 0)
             {
@@ -62,10 +73,15 @@ public class Console implements Runnable {
                 }
             } else if (str.compareTo("/filter_by_price") == 0)
             {
-                ResultSet set = store.getProducts(sc.nextInt(), sc.nextInt());
+                try (ResultSet set = store.getProducts(sc.nextInt(), sc.nextInt()))
+                {
                 if (set != null)
                 {
                     printRows(set,4, new int[] { Store.POSITION_PRODID, Store.POSITION_ID,Store.POSITION_TITLE, Store.POSITION_COST});
+                }
+                } catch (Exception ex)
+                {
+                    System.out.println("Error " + ex.toString());
                 }
             } else {
             }
@@ -85,7 +101,6 @@ public class Console implements Runnable {
             }
         } catch(Exception ex)
         {
-
         }
     }
 }
