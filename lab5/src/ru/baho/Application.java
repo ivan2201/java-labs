@@ -90,19 +90,25 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws Exception {
         try {
             Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
-            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+            try (Connection db = DriverManager.getConnection(DB_URL, USER, PASS)) {
+                System.out.println("Connection succesfull!");
+                try (Statement statement = db.createStatement())
+                {
+                    //TODO
+                } catch (Exception ex) {
+                    System.out.println("Connection failed...");
+                    System.out.println(ex);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         } catch (Exception ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("error create Connection");
             alert.setContentText(ex.toString());
-            alert.showAndWait();
-        }
-        if (connection != null) {
-
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Failed connection to DB");
-            alert.setContentText(null);
             alert.showAndWait();
         }
         try {

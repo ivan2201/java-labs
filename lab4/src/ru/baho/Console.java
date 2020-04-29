@@ -1,6 +1,7 @@
 package ru.baho;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
@@ -46,7 +47,7 @@ public class Console implements Runnable {
                     if (set != null) {
                         printRows(set, 4, new int[]{Store.POSITION_PRODID, Store.POSITION_ID, Store.POSITION_TITLE, Store.POSITION_COST});
                     }
-                } catch (Exception ex)
+                } catch (SQLException ex)
                 {
                     System.out.println("Error " + ex.toString());
                 }
@@ -58,7 +59,7 @@ public class Console implements Runnable {
                     {
                         printRows(set,2, new int[] { 1, 2});
                     }
-                } catch (Exception ex)
+                } catch (SQLException ex)
                 {
                 System.out.println("Error " + ex.toString());
                 }
@@ -79,7 +80,7 @@ public class Console implements Runnable {
                 {
                     printRows(set,4, new int[] { Store.POSITION_PRODID, Store.POSITION_ID,Store.POSITION_TITLE, Store.POSITION_COST});
                 }
-                } catch (Exception ex)
+                } catch (SQLException ex)
                 {
                     System.out.println("Error " + ex.toString());
                 }
@@ -99,7 +100,7 @@ public class Console implements Runnable {
                 }
                 System.out.print('\n');
             }
-        } catch(Exception ex)
+        } catch(SQLException ex)
         {
         }
     }

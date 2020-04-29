@@ -10,22 +10,24 @@ public class Main {
             Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
             try (Connection db = DriverManager.getConnection(DB_URL, USER, PASS)) {
                 System.out.println("Connection succesfull!");
-                try (Statement statement = db.createStatement())
-                {
+                try (Statement statement = db.createStatement()) {
                     (new Console(statement)).run();
                 } catch (Exception ex) {
                     System.out.println("Connection failed...");
                     System.out.println(ex);
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (SQLException ex) {
                 throw ex;
             }
-
-        } catch (Exception ex) {
+        }catch (ClassNotFoundException ex)
+        {
+            System.out.println("Failed to load Database Driver");
+        } catch (SQLException ex) {
             System.out.println("Failed to make connection to database");
             System.out.println(ex);
+        } catch (Exception ex)
+        {
+            System.out.println("Unknown Error");
         }
     }
 }
