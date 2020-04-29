@@ -26,7 +26,7 @@ public class Store {
                     "   id bigserial primary key\n" +
                     ");");
             return true;
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
         return false;
@@ -37,7 +37,7 @@ public class Store {
         try {
             statement.executeUpdate("DROP TABLE products;");
             return true;
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
         return false;
@@ -49,7 +49,7 @@ public class Store {
                     Long.toString(((long)title.hashCode()) + 5000000000L) + ", " +
                             Long.toString(cost) + ");");
             return true;
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
         return false;
@@ -59,7 +59,7 @@ public class Store {
         try {
             statement.executeUpdate("DELETE FROM products WHERE title = '" + title + "';");
             return true;
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
         return false;
@@ -68,7 +68,7 @@ public class Store {
     public ResultSet getAllProducts() {
         try {
             return statement.executeQuery("SELECT * FROM products;");
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
         return null;
@@ -78,7 +78,7 @@ public class Store {
         try {
             return statement.executeQuery("SELECT title, cost FROM products\n" +
                     "WHERE title = '" + title + "';");
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
         return null;
@@ -90,7 +90,7 @@ public class Store {
                     "SET cost = " + Long.toString(price) +
                     "WHERE title = '" + title + "';");
             return true;
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
         return false;
@@ -102,7 +102,7 @@ public class Store {
                     "WHERE cost > " + Long.toString(min) +
                     " AND cost < " + Long.toString(max) + "\n" +
                     "ORDER BY title;");
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
         return null;
@@ -117,7 +117,7 @@ public class Store {
                         Long.toString(((long)("товар" + str).hashCode()) + 5000000000L) + ", " +
                         str + "0);");
             }
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex);
         }
     }
