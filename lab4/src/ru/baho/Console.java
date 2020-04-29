@@ -102,6 +102,7 @@ public class Console implements Runnable {
             }
         } catch(SQLException ex)
         {
+            System.out.println("printing error "+ ex);
         }
     }
 }
